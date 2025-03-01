@@ -13,11 +13,13 @@ const (
 
 type Game struct {
 	blocks []*Block
+	player *Player
 }
 
 func NewGame() *Game {
 	g := &Game{}
 	g.blocks = generateInitialBlocks()
+	g.player = NewPlayer()
 
 	return g
 }
@@ -27,6 +29,11 @@ func (g *Game) Update() error {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
+	// プレイヤーの描画
+	var playerOpts ebiten.DrawImageOptions
+	playerOpts.GeoM.Translate(g.player.x, g.player.y)
+	screen.DrawImage(g.player.img, &playerOpts)
+
 	// ブロックの描画
 	for _, block := range g.blocks {
 		// isVisible == false の Block（ボールが衝突した場合）は表示しない
