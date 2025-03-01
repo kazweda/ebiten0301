@@ -25,6 +25,20 @@ func NewGame() *Game {
 }
 
 func (g *Game) Update() error {
+	// プレイヤーの移動
+	if ebiten.IsKeyPressed(ebiten.KeyLeft) {
+		g.player.x -= g.player.speed
+		if g.player.x < 0 {
+			g.player.x = 0
+		}
+	}
+	if ebiten.IsKeyPressed(ebiten.KeyRight) {
+		g.player.x += g.player.speed
+		if g.player.x > gameScreenWidth-playerWidth {
+			g.player.x = gameScreenWidth - playerWidth
+		}
+	}
+
 	return nil
 }
 
