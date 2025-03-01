@@ -71,7 +71,11 @@ func (g *Game) Update() error {
 	if (g.ball.y+g.ball.radius >= g.player.y) && (g.ball.y+g.ball.radius <= g.player.y+g.player.height) {
 		if g.ball.x >= g.player.x && g.ball.x <= g.player.x+g.player.width {
 			// ボールの速度を更新
-			g.ball.speedY *= -1
+			relativeIntersectX := (g.ball.x - (g.player.x + g.player.width/2)) / (g.player.width / 2)
+			bounceAngle := relativeIntersectX * (math.Pi / 3) // 最大60度の角度で反射
+
+			g.ball.speedX = ballSpeed * math.Sin(bounceAngle)
+			g.ball.speedY = -ballSpeed * math.Cos(bounceAngle)
 
 			// ボールをプレイヤーの上に位置させる
 			g.ball.y = g.player.y - g.ball.radius - 1
@@ -89,6 +93,9 @@ func (g *Game) Update() error {
 			}
 		}
 	}
+
+	// // speedX と speedY をターミナルに出力
+	// log.Printf("Ball speedX: %f, speedY: %f", g.ball.speedX, g.ball.speedY)
 
 	return nil
 }
