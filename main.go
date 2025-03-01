@@ -22,11 +22,15 @@ type Game struct {
 
 func NewGame() *Game {
 	g := &Game{}
+	g.initialize()
+
+	return g
+}
+
+func (g *Game) initialize() {
 	g.blocks = generateInitialBlocks()
 	g.player = NewPlayer()
 	g.ball = NewBall()
-
-	return g
 }
 
 func (g *Game) Update() error {
@@ -42,6 +46,25 @@ func (g *Game) Update() error {
 		if g.player.x > gameScreenWidth-playerWidth {
 			g.player.x = gameScreenWidth - playerWidth
 		}
+	}
+
+	// ボールの移動
+	g.ball.x += g.ball.speedX
+	g.ball.y += g.ball.speedY
+
+	// ボールと壁との衝突判定
+	// 左の壁：g.ball.x < g.ball.radius
+	// 右の壁：g.ball.x > gameScreenWidth-g.ball.radius
+	if g.ball.x < g.ball.radius || g.ball.x > gameScreenWidth-g.ball.radius {
+		g.ball.speedX *= -1
+	}
+	// 上の壁：g.ball.y < g.ball.radius
+	if g.ball.y < g.ball.radius {
+		g.ball.speedY *= -1
+	}
+	// 下の壁はゲームオーバー
+	if g.ball.y > gameScreenHeight-g.ball.radius {
+		g.initialize() // ゲームオーバーになったら、ゲームを初期化する。
 	}
 
 	return nil
