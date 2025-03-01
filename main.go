@@ -67,6 +67,29 @@ func (g *Game) Update() error {
 		g.initialize() // ゲームオーバーになったら、ゲームを初期化する。
 	}
 
+	// プレイヤーとボールの衝突判定
+	if (g.ball.y+g.ball.radius >= g.player.y) && (g.ball.y+g.ball.radius <= g.player.y+g.player.height) {
+		if g.ball.x >= g.player.x && g.ball.x <= g.player.x+g.player.width {
+			// ボールの速度を更新
+			g.ball.speedY *= -1
+
+			// ボールをプレイヤーの上に位置させる
+			g.ball.y = g.player.y - g.ball.radius - 1
+		}
+	}
+
+	// ブロックとボールの衝突判定
+	for _, block := range g.blocks {
+		if block.isVisible {
+			if g.ball.x >= block.x && g.ball.x <= block.x+block.width &&
+				g.ball.y-g.ball.radius <= block.y+block.height && g.ball.y+g.ball.radius >= block.y {
+				g.ball.speedY *= -1
+				block.isVisible = false
+				break
+			}
+		}
+	}
+
 	return nil
 }
 
