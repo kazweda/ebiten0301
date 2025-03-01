@@ -12,6 +12,8 @@ const (
 	playerHeight   = 10                                  // プレイヤーの高さ
 	initialPlayerX = (gameScreenWidth - playerWidth) / 2 // プレイヤーの初期位置
 	initialPlayerY = gameScreenHeight - playerHeight     // プレイヤーの初期位置
+	playerSpeed    = 6                                   // プレイヤーのスピード
+
 )
 
 type Player struct {
@@ -19,6 +21,7 @@ type Player struct {
 	width  float64
 	height float64
 	img    *ebiten.Image
+	speed  float64
 }
 
 func NewPlayer() *Player {
@@ -31,5 +34,6 @@ func NewPlayer() *Player {
 		width:  playerWidth,
 		height: playerHeight,
 		img:    img,
+		speed:  playerSpeed,
 	}
 }
